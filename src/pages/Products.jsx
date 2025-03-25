@@ -86,7 +86,7 @@ export default function Products() {
 
     return (
         <div className="bg-white dark:bg-gray-900">
-            <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+            <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 lg:max-w-7xl lg:px-8">
                 <div className="flex justify-between items-center mb-8">
                     <h2 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Products</h2>
                     <select
@@ -101,45 +101,50 @@ export default function Products() {
                     </select>
                 </div>
 
-                <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+                <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                     {sortedProducts.map((product) => (
                         <div key={product.id} className="group relative">
-                            <div className="relative aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700">
+                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700">
                                 {!imageLoadStates[product.id] && (
                                     <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+                                        <div className="animate-pulse text-gray-400">Loading...</div>
                                     </div>
                                 )}
                                 <img
                                     src={product.image}
                                     alt={product.title}
-                                    className={`h-full w-full object-contain object-center transition-opacity duration-300 ${imageLoadStates[product.id] ? 'opacity-100' : 'opacity-0'
-                                        }`}
+                                    className={`h-full w-full object-contain object-center transition-opacity duration-300 ${
+                                        imageLoadStates[product.id] ? 'opacity-100' : 'opacity-0'
+                                    }`}
                                     onLoad={() => handleImageLoad(product.id)}
                                     onError={(e) => handleImageError(e, product)}
-                                    loading="lazy"
                                 />
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation()
-                                        toggleWishlist(product)
-                                    }}
-                                    className="absolute top-2 right-2 p-2 rounded-full bg-white/80 hover:bg-white dark:bg-gray-800/80 dark:hover:bg-gray-800"
-                                >
-                                    {wishlistItems.some(item => item.id === product.id) ? (
-                                        <HeartSolid className="h-6 w-6 text-red-500" />
-                                    ) : (
-                                        <HeartOutline className="h-6 w-6 text-gray-400 hover:text-red-500" />
-                                    )}
-                                </button>
                             </div>
-                            <div
-                                className="mt-4 cursor-pointer"
-                                onClick={() => handleProductClick(product)}
-                            >
-                                <h3 className="text-sm text-gray-700 dark:text-gray-300">{product.title}</h3>
-                                <p className="mt-1 text-lg font-medium text-gray-900 dark:text-white">${product.price.toFixed(2)}</p>
-                                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{product.description}</p>
+                            <div className="mt-4 flex justify-between">
+                                <div>
+                                    <h3 className="text-sm text-gray-700 dark:text-gray-200">
+                                        <div
+                                            onClick={() => handleProductClick(product)}
+                                            className="cursor-pointer hover:text-primary-600"
+                                        >
+                                            {product.title}
+                                        </div>
+                                    </h3>
+                                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{product.category}</p>
+                                </div>
+                                <div>
+                                    <p className="text-sm font-medium text-gray-900 dark:text-white">${product.price.toFixed(2)}</p>
+                                    <button
+                                        onClick={() => toggleWishlist(product)}
+                                        className="mt-2 text-gray-400 hover:text-red-500"
+                                    >
+                                        {wishlistItems.some(item => item.id === product.id) ? (
+                                            <HeartSolid className="h-5 w-5 text-red-500" />
+                                        ) : (
+                                            <HeartOutline className="h-5 w-5" />
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -147,4 +152,4 @@ export default function Products() {
             </div>
         </div>
     )
-} 
+}

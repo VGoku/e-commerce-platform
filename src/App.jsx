@@ -13,30 +13,39 @@ import Dashboard from './pages/Dashboard'
 import WishlistView from './pages/WishlistView'
 import About from './pages/About'
 import Contact from './pages/Contact'
+import FAQ from './pages/FAQ'
 import Footer from './components/Footer'
 import { Toaster } from 'react-hot-toast'
 import useThemeStore from './stores/useThemeStore'
 import useAuthStore from './stores/useAuthStore'
+import Shipping from './pages/Shipping'
+import Returns from './pages/Returns'
 
 function App() {
     const { theme } = useThemeStore()
     const { initialize } = useAuthStore()
 
     useEffect(() => {
-        // Initialize auth state
-        initialize()
-
+        // Initialize auth state immediately
+        const cleanup = initialize()
+        
         // Apply theme class to html element
         document.documentElement.classList.remove('light', 'dark')
         document.documentElement.classList.add(theme)
-    }, [theme, initialize])
+
+        return () => {
+            if (typeof cleanup === 'function') {
+                cleanup()
+            }
+        }
+    }, [initialize, theme])
 
     return (
         <Router>
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
                 <Navigation />
                 <Toaster position="top-right" />
-                <main className="container mx-auto px-4 py-8">
+                <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/products" element={<Products />} />
@@ -50,6 +59,9 @@ function App() {
                         <Route path="/wishlist" element={<WishlistView />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
+                        <Route path="/faq" element={<FAQ />} />
+                        <Route path="/shipping" element={<Shipping />} />
+                        <Route path="/returns" element={<Returns />} />
                     </Routes>
                 </main>
                 <Footer />
@@ -58,4 +70,4 @@ function App() {
     )
 }
 
-export default App 
+export default App

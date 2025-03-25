@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserCircleIcon, CameraIcon } from '@heroicons/react/24/outline'
 import useAuthStore from '../stores/useAuthStore'
-import { supabase } from '../lib/supabase'
+import { supabase } from '../lib/supabaseClient'  // Updated import path
 import toast from 'react-hot-toast'
 
 export default function Profile() {
@@ -361,4 +361,4 @@ export default function Profile() {
             </div>
         </div>
     )
-} 
+}

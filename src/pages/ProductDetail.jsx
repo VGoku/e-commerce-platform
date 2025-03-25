@@ -104,35 +104,30 @@ export default function ProductDetail() {
     }
 
     return (
-        <div className="bg-white dark:bg-gray-900">
-            <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-                <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-                    {/* Image gallery */}
-                    <div className="flex flex-col-reverse">
-                        <div className="aspect-h-1 aspect-w-1 w-full">
-                            <div className="relative h-full w-full rounded-lg border border-gray-200 bg-white p-4">
-                                {!imageLoaded && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-                                        <div className="text-gray-400">Loading image...</div>
-                                    </div>
-                                )}
-                                <img
-                                    src={product.image}
-                                    alt={product.title}
-                                    className={`h-full w-full object-contain transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                                    onLoad={() => setImageLoaded(true)}
-                                    onError={(e) => {
-                                        console.log('Image failed to load:', product.image)
-                                        e.target.src = 'https://placehold.co/400x400/png?text=Product+Image'
-                                        setImageLoaded(true)
-                                    }}
-                                />
+        <div className="bg-white dark:bg-gray-900 min-h-screen p-4">
+            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="relative bg-white dark:bg-gray-800 rounded-lg p-8">
+                        {!imageLoaded && (
+                            <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse flex items-center justify-center rounded-lg">
+                                <span className="text-gray-400">Loading...</span>
                             </div>
-                        </div>
+                        )}
+                        <img
+                            src={product.image}
+                            alt={product.name}
+                            className={`w-full h-full object-contain transition-opacity duration-300 ${
+                                imageLoaded ? 'opacity-100' : 'opacity-0'
+                            }`}
+                            style={{ maxHeight: '500px' }}
+                            onLoad={() => setImageLoaded(true)}
+                            onError={(e) => {
+                                e.target.src = 'https://placehold.co/400x400/png?text=Product+Image'
+                                setImageLoaded(true)
+                            }}
+                        />
                     </div>
-
-                    {/* Product info */}
-                    <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+                    <div className="flex flex-col space-y-4">
                         <div className="flex justify-between items-start">
                             <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{product.title}</h1>
                             <button
@@ -219,4 +214,4 @@ export default function ProductDetail() {
             </div>
         </div>
     )
-} 
+}

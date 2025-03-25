@@ -39,63 +39,52 @@ export default function Navigation() {
         { name: 'Products', href: '/products' },
         { name: 'About', href: '/about' },
         { name: 'Contact', href: '/contact' },
+        { name: 'FAQ', href: '/faq' },
         ...(user ? [{ name: 'Dashboard', href: '/dashboard' }] : [])
     ]
 
     return (
-        <header className="bg-white dark:bg-gray-800 shadow-sm">
+        <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50">
             <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-                <div className="flex w-full items-center justify-between border-b border-gray-200 dark:border-gray-700 py-6">
+                <div className="flex w-full items-center justify-between border-b border-gray-200 dark:border-gray-700 py-3 sm:py-6">
                     <div className="flex items-center">
-                        <Link to="/" className="text-2xl font-bold text-gray-900 dark:text-white">
+                        <Link to="/" className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                             E-Shop
                         </Link>
-                        <div className="ml-10 hidden space-x-8 lg:block">
+                        <div className="hidden ml-10 space-x-4 sm:space-x-8 lg:block">
                             {navigation.map((item) => (
                                 <Link
                                     key={item.name}
                                     to={item.href}
-                                    className={`link ${location.pathname === item.href ? 'active' : ''}`}
+                                    className={`text-sm sm:text-base link ${location.pathname === item.href ? 'active' : ''}`}
                                 >
                                     {item.name}
                                 </Link>
                             ))}
                         </div>
                     </div>
-                    <div className="ml-10 space-x-4 flex items-center">
+                    <div className="flex items-center space-x-2 sm:space-x-4">
                         <button
                             onClick={toggleTheme}
-                            className="rounded-full p-1 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+                            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                         >
-                            {isDarkMode ? (
-                                <SunIcon className="h-6 w-6" aria-hidden="true" />
-                            ) : (
-                                <MoonIcon className="h-6 w-6" aria-hidden="true" />
-                            )}
+                            {isDarkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
                         </button>
-
-                        <Link
-                            to="/wishlist"
-                            className="group -m-2 flex items-center p-2"
-                        >
-                            <HeartIcon
-                                className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 dark:group-hover:text-gray-300"
-                                aria-hidden="true"
-                            />
-                        </Link>
-
-                        <Link
-                            to="/cart"
-                            className="ml-3 relative rounded-full bg-white dark:bg-gray-800 p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-                        >
-                            <ShoppingCartIcon className="h-6 w-6" />
-                            {cartItemsCount > 0 && (
-                                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center h-5 w-5 rounded-full bg-primary-500 text-xs font-medium text-white">
-                                    {cartItemsCount}
-                                </span>
-                            )}
-                        </Link>
-
+                        {user && (
+                            <>
+                                <Link to="/wishlist" className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                    <HeartIcon className="h-5 w-5" />
+                                </Link>
+                                <Link to="/cart" className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 relative">
+                                    <ShoppingCartIcon className="h-5 w-5" />
+                                    {cartItemsCount > 0 && (
+                                        <span className="absolute -top-1 -right-1 bg-primary-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+                                            {cartItemsCount}
+                                        </span>
+                                    )}
+                                </Link>
+                            </>
+                        )}
                         {user ? (
                             <Menu as="div" className="relative ml-3">
                                 <div>
@@ -163,4 +152,4 @@ export default function Navigation() {
             </nav>
         </header>
     )
-} 
+}

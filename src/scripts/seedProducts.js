@@ -1,4 +1,5 @@
-import { createProduct } from '../lib/supabase'
+import { supabase, createProduct } from '../lib/supabaseClient'
+import dotenv from 'dotenv'
 
 const sampleProducts = [
     {
@@ -63,4 +64,4 @@ const seedProducts = async () => {
 }
 
 // Run the seeding function
-seedProducts() 
+seedProducts()

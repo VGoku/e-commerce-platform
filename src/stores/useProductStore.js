@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../lib/supabase'
+import { createProduct, updateProduct, deleteProduct } from '../lib/supabaseClient'
 
 const useProductStore = create((set, get) => ({
     products: [],
@@ -11,20 +11,24 @@ const useProductStore = create((set, get) => ({
         set({ loading: true, error: null })
         try {
             const response = await fetch('https://fakestoreapi.com/products')
-            if (!response.ok) throw new Error('Failed to fetch products')
             const data = await response.json()
 
-            // Map the data and provide fallback images
-            const productsWithFallback = data.map(product => ({
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format received from API')
+            }
+            
+            const productsWithImages = data.map(product => ({
                 ...product,
                 image: product.image || 'https://placehold.co/400x400/png?text=Product+Image',
                 fallbackImage: 'https://placehold.co/400x400/png?text=Product+Image'
             }))
 
-            set({ products: productsWithFallback, loading: false })
+            set({ products: productsWithImages })
         } catch (error) {
             console.error('Error fetching products:', error)
-            set({ error: error.message, loading: false })
+            set({ error: error.message })
+        } finally {
+            set({ loading: false })
         }
     },
 
@@ -92,4 +96,4 @@ const useProductStore = create((set, get) => ({
     clearError: () => set({ error: null }),
 }))
 
-export default useProductStore 
+export default useProductStore

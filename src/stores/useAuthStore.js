@@ -10,77 +10,54 @@ const useAuthStore = create(
             loading: false,
             error: null,
 
-            // Initialize the auth state
             initialize: async () => {
                 set({ loading: true, error: null })
                 try {
-                    const { data: { session }, error } = await supabase.auth.getSession()
-                    if (error) throw error
+                    // First, try to get existing session
+                    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+                    if (sessionError) throw sessionError
 
-                    if (session) {
+                    // Update user state based on session
+                    if (session?.user) {
                         set({ user: session.user })
                     }
 
-                    // Listen for auth changes
+                    // Set up auth state change listener
                     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-                        set({ user: session?.user || null })
+                        set({ user: session?.user ?? null })
                     })
 
-                    return () => {
-                        if (subscription) subscription.unsubscribe()
-                    }
+                    return () => subscription?.unsubscribe()
                 } catch (error) {
                     console.error('Auth initialization error:', error)
-                    set({ error: error.message })
+                    set({ error: 'Failed to initialize authentication' })
                 } finally {
                     set({ loading: false })
                 }
             },
 
-            // Sign in with email
             signIn: async (email, password) => {
                 set({ loading: true, error: null })
                 try {
-                    // Validate inputs
-                    if (!email || !password) {
-                        throw new Error('Email and password are required')
-                    }
-
-                    // Attempt to sign in
                     const { data: { session }, error } = await supabase.auth.signInWithPassword({
                         email: email.trim(),
                         password
                     })
 
-                    if (error) {
-                        if (error.message.includes('Email not confirmed')) {
-                            throw new Error('Please check your email and confirm your account before signing in')
-                        }
-                        throw error
+                    if (error) throw error
+                    if (session) {
+                        set({ user: session.user })
                     }
-
-                    if (!session) {
-                        throw new Error('No session returned after login')
-                    }
-
-                    set({ user: session.user })
                     return { success: true }
                 } catch (error) {
                     console.error('Sign in error:', error)
-                    let errorMessage = 'Failed to sign in'
-                    if (error.message.includes('Invalid login credentials')) {
-                        errorMessage = 'Invalid email or password'
-                    } else if (error.message.includes('Email not confirmed')) {
-                        errorMessage = 'Please confirm your email before signing in'
-                    }
-                    set({ error: errorMessage })
-                    return { success: false, error: errorMessage }
+                    set({ error: error.message })
+                    return { success: false, error: error.message }
                 } finally {
                     set({ loading: false })
                 }
             },
 
-            // Sign in with GitHub
             signInWithGithub: async () => {
                 set({ loading: true, error: null })
                 try {
@@ -101,7 +78,6 @@ const useAuthStore = create(
                 }
             },
 
-            // Sign up with email
             signUp: async (email, password, username) => {
                 set({ loading: true, error: null })
                 try {
@@ -162,7 +138,6 @@ const useAuthStore = create(
                 }
             },
 
-            // Sign out
             signOut: async () => {
                 set({ loading: true, error: null })
                 try {
@@ -180,14 +155,16 @@ const useAuthStore = create(
                 }
             },
 
-            // Clear error
             clearError: () => set({ error: null }),
         }),
         {
             name: 'auth-storage',
-            partialize: (state) => ({ user: state.user })
+            storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+            partialize: (state) => ({
+                user: state.user,
+            }),
         }
     )
 )
 
-export default useAuthStore 
+export default useAuthStore
