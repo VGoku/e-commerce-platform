@@ -46,11 +46,13 @@ export default function Navigation() {
     return (
         <header className="bg-white dark:bg-gray-800 shadow-sm sticky top-0 z-50">
             <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-                <div className="flex w-full items-center justify-between border-b border-gray-200 dark:border-gray-700 py-3 sm:py-6">
+                <div className="flex w-full items-center justify-between border-b border-gray-200 dark:border-gray-700 py-3">
                     <div className="flex items-center">
                         <Link to="/" className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                             E-Shop
                         </Link>
+                        
+                        {/* Desktop Navigation */}
                         <div className="hidden ml-10 space-x-4 sm:space-x-8 lg:block">
                             {navigation.map((item) => (
                                 <Link
@@ -63,6 +65,22 @@ export default function Navigation() {
                             ))}
                         </div>
                     </div>
+
+                    {/* Mobile Menu Button */}
+                    <div className="flex lg:hidden">
+                        <button
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                            className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400"
+                        >
+                            {mobileMenuOpen ? (
+                                <XMarkIcon className="h-6 w-6" />
+                            ) : (
+                                <Bars3Icon className="h-6 w-6" />
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Actions (Theme, Cart, User) */}
                     <div className="flex items-center space-x-2 sm:space-x-4">
                         <button
                             onClick={toggleTheme}
@@ -149,6 +167,24 @@ export default function Navigation() {
                         )}
                     </div>
                 </div>
+
+                {/* Mobile Navigation Menu */}
+                {mobileMenuOpen && (
+                    <div className="lg:hidden py-2">
+                        <div className="space-y-1 px-2">
+                            {navigation.map((item) => (
+                                <Link
+                                    key={item.name}
+                                    to={item.href}
+                                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    onClick={() => setMobileMenuOpen(false)}
+                                >
+                                    {item.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </nav>
         </header>
     )

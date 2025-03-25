@@ -105,9 +105,9 @@ export default function ProductDetail() {
 
     return (
         <div className="bg-white dark:bg-gray-900 min-h-screen p-4">
-            <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="relative bg-white dark:bg-gray-800 rounded-lg p-8">
+            <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-8">
+                    <div className="relative bg-white dark:bg-gray-800 rounded-lg p-4 sm:p-8">
                         {!imageLoaded && (
                             <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse flex items-center justify-center rounded-lg">
                                 <span className="text-gray-400">Loading...</span>
@@ -127,9 +127,11 @@ export default function ProductDetail() {
                             }}
                         />
                     </div>
-                    <div className="flex flex-col space-y-4">
-                        <div className="flex justify-between items-start">
-                            <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">{product.title}</h1>
+                    <div className="flex flex-col space-y-4 p-4">
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between">
+                            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-2 sm:mb-0">
+                                {product.title}
+                            </h1>
                             <button
                                 onClick={toggleWishlist}
                                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -208,7 +210,7 @@ export default function ProductDetail() {
                 </div>
 
                 {/* Reviews Section */}
-                <div className="mt-16">
+                <div className="mt-8 sm:mt-16">
                     <ProductReviews productId={product.id} />
                 </div>
             </div>
