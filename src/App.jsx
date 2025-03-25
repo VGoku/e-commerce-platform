@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import Navigation from './components/Navigation'
 import Home from './pages/Home'
 import Products from './pages/Products'
@@ -20,6 +20,17 @@ import useThemeStore from './stores/useThemeStore'
 import useAuthStore from './stores/useAuthStore'
 import Shipping from './pages/Shipping'
 import Returns from './pages/Returns'
+
+// Create a ScrollToTop component
+function ScrollToTop() {
+    const { pathname } = useLocation();
+    
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+    
+    return null;
+}
 
 function App() {
     const { theme } = useThemeStore()
@@ -43,6 +54,7 @@ function App() {
     return (
         <Router>
             <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+                <ScrollToTop /> {/* Add this line */}
                 <Navigation />
                 <Toaster position="top-right" />
                 <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
